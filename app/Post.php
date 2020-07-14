@@ -1,0 +1,31 @@
+<?php
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Post extends Model
+{
+    protected $fillable = ['timeline_id', 'type', 'content', 'user_id', 'is_draft'];
+
+    public function comment()
+    {
+        return $this->belongsToMany(Comment::class,'comment_post');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function favourite()
+    {
+        return $this->morphMany(Favourite::class,'type');
+    }
+
+    public function timeline()
+    {
+        return $this->belongsTo(Timeline::class);
+    }
+
+}
