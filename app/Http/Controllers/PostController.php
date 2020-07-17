@@ -15,21 +15,20 @@ class PostConroller extends Controller
      */
     public function index(Request $request)
     {
-         try{
-            if(isset($request->user_id)){ 
+        try {
+            if (isset($request->user_id)) {
                 $user = User::find($request->user_id);
-                $posts = $user->posts()->with('user')->withCount('favourite','comment')->paginate(8);
-            }else{
+                $posts = $user->posts()->with('user')->withCount('favourite', 'comment')->paginate(8);
+            } else {
                 $user = auth()->user();
-                $posts = $user->posts()->with('user')->withCount('favourite','comment')->paginate(8);
+                $posts = $user->posts()->with('user')->withCount('favourite', 'comment')->paginate(8);
             }
             $data['data'] = $posts;
             $data['message'] = 'lists';
-            return  $this->apiResponse($data,200);
-        }catch(\Exception $e)
-        {
+            return  $this->apiResponse($data, 200);
+        } catch (\Exception $e) {
             $data['message'] = $e->getMessage();
-            return  $this->apiResponse($data,404);
+            return  $this->apiResponse($data, 404);
         }
     }
 
@@ -41,16 +40,28 @@ class PostConroller extends Controller
      */
     public function store(Request $request)
     {
-        try{
+        try {
             $data = $request->all();
+            if ($request->hasFile('files')) {
+                foreach ($request->file('files') as $file) {
+                    $filenameWithExt = $file->getClientOriginalName();
+
+                    $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+                    // Get just ext
+                    $extension = $file->getClientOriginalExtension();
+                    // Filename to store
+                    $fileNameToStore = $filename . '_' . time() . '.' . $extension;
+                    // Upload Image
+                    $path = $file->storeAs('public/files', $fileNameToStore);
+                }
+            }
             $post = Post::create($data);
             $data['data'] = $post;
             $data['message'] = 'create';
-            return  $this->apiResponse($data,200);
-        }catch(\Exception $e)
-        {
+            return  $this->apiResponse($data, 200);
+        } catch (\Exception $e) {
             $data['message'] = $e->getMessage();
-            return  $this->apiResponse($data,404);
+            return  $this->apiResponse($data, 404);
         }
     }
 
@@ -62,14 +73,13 @@ class PostConroller extends Controller
      */
     public function show(Post $post)
     {
-        try{
+        try {
             $data['data'] = $post;
             $data['message'] = 'edit';
-            return  $this->apiResponse($data,200);
-        }catch(\Exception $e)
-        {
+            return  $this->apiResponse($data, 200);
+        } catch (\Exception $e) {
             $data['message'] = 'error';
-            return  $this->apiResponse($data,404);
+            return  $this->apiResponse($data, 404);
         }
     }
 
@@ -83,16 +93,15 @@ class PostConroller extends Controller
     public function update(Request $request, Post $post)
     {
 
-        try{
+        try {
             $data = $request->all();
             $post = $post->update($data);
             $data['data'] = $post;
             $data['message'] = 'update';
-            return  $this->apiResponse($data,200);
-        }catch(\Exception $e)
-        {
+            return  $this->apiResponse($data, 200);
+        } catch (\Exception $e) {
             $data['message'] = 'error';
-            return  $this->apiResponse($data,404);
+            return  $this->apiResponse($data, 404);
         }
     }
 
@@ -104,15 +113,14 @@ class PostConroller extends Controller
      */
     public function destroy(Post $post)
     {
-        try{
+        try {
             $post = $post->delete();
             $data['data'] = $post;
             $data['message'] = 'delete';
-            return  $this->apiResponse($data,200);
-        }catch(\Exception $e)
-        {
+            return  $this->apiResponse($data, 200);
+        } catch (\Exception $e) {
             $data['message'] = 'error';
-            return  $this->apiResponse($data,404);
+            return  $this->apiResponse($data, 404);
         }
     }
 }
