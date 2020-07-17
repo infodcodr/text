@@ -92,7 +92,7 @@ class UserController extends Controller
             $data['message'] = 'follow';
             return  $this->apiResponse($data,200);
         }catch(\Exception $e){
-            $data['message'] = 'error';
+            $data['message'] = $e->getMessage();
             return  $this->apiResponse($data,404);
         }
     }
@@ -140,8 +140,7 @@ class UserController extends Controller
     {
         try{
             $files = $request->all();
-            dd($files['image']->getClientOriginalName());
-            $data['message'] = 'remove user';
+            $data['message'] = $files;
             return  $this->apiResponse($data,200);
         }catch(\Exception $e){
             $data['message'] = 'error';

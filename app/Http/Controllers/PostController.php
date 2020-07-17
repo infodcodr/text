@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Post;
+use App\User;
 use Illuminate\Http\Request;
 
 class PostConroller extends Controller
@@ -12,9 +13,24 @@ class PostConroller extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+         try{
+            if(isset($request->user_id)){ 
+                $user = User::find($request->user_id);
+                $posts = $user->posts()->with('user')->withCount('favourite','comment')->paginate(8);
+            }else{
+                $user = auth()->user();
+                $posts = $user->posts()->with('user')->withCount('favourite','comment')->paginate(8);
+            }
+            $data['data'] = $posts;
+            $data['message'] = 'lists';
+            return  $this->apiResponse($data,200);
+        }catch(\Exception $e)
+        {
+            $data['message'] = $e->getMessage();
+            return  $this->apiResponse($data,404);
+        }
     }
 
     /**
@@ -33,7 +49,7 @@ class PostConroller extends Controller
             return  $this->apiResponse($data,200);
         }catch(\Exception $e)
         {
-            $data['message'] = 'error';
+            $data['message'] = $e->getMessage();
             return  $this->apiResponse($data,404);
         }
     }
