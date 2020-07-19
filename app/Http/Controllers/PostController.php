@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Post;
 use App\User;
+use App\Images;
 use Illuminate\Http\Request;
 
 class PostConroller extends Controller
@@ -42,6 +43,7 @@ class PostConroller extends Controller
     {
         try {
             $data = $request->all();
+            $post = Post::create($data);
             if ($request->hasFile('files')) {
                 foreach ($request->file('files') as $file) {
                     $filenameWithExt = $file->getClientOriginalName();
@@ -52,10 +54,14 @@ class PostConroller extends Controller
                     // Filename to store
                     $fileNameToStore = $filename . '_' . time() . '.' . $extension;
                     // Upload Image
-                    $path = $file->storeAs('public/files', $fileNameToStore);
+                    $file->storeAs('public/files', $fileNameToStore);
+                    $image = New Images();
+                    $image->name = $filenameWithExt;
+                    $image->save();
+                    $post->images()->save($image);
                 }
             }
-            $post = Post::create($data);
+
             $data['data'] = $post;
             $data['message'] = 'create';
             return  $this->apiResponse($data, 200);

@@ -18,6 +18,11 @@ class Post extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function images()
+    {
+        return $this->belongsTo(Images::class);
+    }
+
     public function favourite()
     {
         return $this->morphMany(Favourite::class,'type');
