@@ -24,6 +24,7 @@ Route::group([ 'prefix' => 'auth'], function (){
     });
 });
 Route::group(['middleware' => 'auth:api'], function() {
+    Route::post('timeline', 'PostConroller@index');
     Route::post('post', 'PostConroller@store');
     Route::post('post/{id}', 'PostConroller@show');
     Route::post('post/{id}/update', 'PostConroller@update');

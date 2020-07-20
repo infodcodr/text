@@ -38,7 +38,7 @@ trait Followable
     {
 
         $this->followings()->attach($user, [
-            'accepted_at' => $isPending ? null : now()
+            'status' => 'pending'
         ]);
 
     }
@@ -73,7 +73,7 @@ trait Followable
      */
     public function acceptFollowRequestFrom($user)
     {
-        $this->followers()->updateExistingPivot($user, ['accepted_at' => now()]);
+        $this->followers()->updateExistingPivot($user, ['status' => 'active']);
     }
 
     /**
@@ -88,12 +88,10 @@ trait Followable
         /* @var \Illuminate\Database\Eloquent\Model $this */
         if ($this->relationLoaded('followings')) {
             return $this->followings
-                ->where('pivot.accepted_at', '===', null)
                 ->contains($user);
         }
 
         return $this->followings()
-            ->wherePivot('accepted_at', null)
             ->where($this->getQualifiedKeyName(), $user)
             ->exists();
     }
@@ -112,12 +110,10 @@ trait Followable
         /* @var \Illuminate\Database\Eloquent\Model $this */
         if ($this->relationLoaded('followings')) {
             return $this->followings
-                ->where('pivot.accepted_at', '!==', null)
                 ->contains($user);
         }
 
         return $this->followings()
-            ->wherePivot('accepted_at', '!=', null)
             ->where($this->getQualifiedKeyName(), $user)
             ->exists();
     }
@@ -136,12 +132,10 @@ trait Followable
         /* @var \Illuminate\Database\Eloquent\Model $this */
         if ($this->relationLoaded('followers')) {
             return $this->followers
-                ->where('pivot.accepted_at', '!==', null)
                 ->contains($user);
         }
 
         return $this->followers()
-            ->wherePivot('accepted_at', '!=', null)
             ->where($this->getQualifiedKeyName(), $user)
             ->exists();
     }
@@ -165,10 +159,10 @@ trait Followable
         /* @var \Illuminate\Database\Eloquent\Model $this */
         return $this->belongsToMany(
             __CLASS__,
-            \config('follow.relation_table', 'user_follower'),
-            'following_id',
-            'follower_id'
-        )->withPivot('accepted_at')->withTimestamps()->using(UserFollower::class);
+            \config('follow.relation_table', 'follows'),
+            'to_user_id',
+            'from_user_id'
+        );
     }
 
     /**
@@ -179,9 +173,9 @@ trait Followable
         /* @var \Illuminate\Database\Eloquent\Model $this */
         return $this->belongsToMany(
             __CLASS__,
-            \config('follow.relation_table', 'user_follower'),
-            'follower_id',
-            'following_id'
-        )->withPivot('accepted_at')->withTimestamps()->using(UserFollower::class);
+            \config('follow.relation_table', 'follows'),
+            'from_user_id',
+            'to_user_id'
+        );
     }
 }
