@@ -42,7 +42,7 @@ class CommentController extends Controller
             unset($data['post_id']);
             $comment = Comment::create($data);
             $post->comment()->save($comment);
-            $data['data'] = $data;
+            $data['data'] = Comment::with('user')->where('id',$comment->id)->first();
             $data['message'] = 'create';
             return  $this->apiResponse($data,200);
         }catch(\Exception $e)

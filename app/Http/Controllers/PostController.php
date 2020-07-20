@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Post;
 use App\User;
 use App\Images;
+use Storage;
 use Illuminate\Http\Request;
 
 class PostConroller extends Controller
@@ -19,10 +20,10 @@ class PostConroller extends Controller
         try {
             if (isset($request->user_id)) {
                 $user = User::find($request->user_id);
-                $posts = $user->posts()->with('user')->withCount('favourite', 'comment')->paginate(8);
+                $posts = $user->posts()->with(['user','images','favouriteUser','comment','comment.user'])->withCount('favourite', 'comment')->orderBy('id','desc')->paginate(8);
             } else {
                 $user = auth()->user();
-                $posts = $user->posts()->with('user')->withCount('favourite', 'comment')->paginate(8);
+                $posts = $user->posts()->with(['user','images','favouriteUser','comment','comment.user'])->withCount('favourite', 'comment')->orderBy('id','desc')->paginate(8);
             }
             $data['data'] = $posts;
             $data['message'] = 'lists';
@@ -43,7 +44,7 @@ class PostConroller extends Controller
     {
         try {
             $data = $request->all();
-            $post = Post::create($data);
+           $post = Post::create($data);
             if ($request->hasFile('files')) {
                 foreach ($request->file('files') as $file) {
                     $filenameWithExt = $file->getClientOriginalName();
@@ -56,19 +57,42 @@ class PostConroller extends Controller
                     // Upload Image
                     $file->storeAs('public/files', $fileNameToStore);
                     $image = New Images();
-                    $image->name = $filenameWithExt;
+                    $image->name = $fileNameToStore;
+                    $image->post_id = $post->id;
                     $image->save();
                     $post->images()->save($image);
                 }
             }
+                if(isset($data['base64Image']))
+                {
+                    foreach ($data['base64Image'] as $images) {
+                    $imageName = $this->createImage($images);
+                    $imageBase = New Images();
+                    $imageBase->name = $imageName;
+                    $imageBase->post_id = $post->id;
+                    $imageBase->save();
+                    $post->images()->save($imageBase);
 
-            $data['data'] = $post;
+                    }
+                }
+            $data['data'] = Post::with('user','images')->withCount('favourite', 'comment')->where('id',$post->id)->first();
             $data['message'] = 'create';
             return  $this->apiResponse($data, 200);
         } catch (\Exception $e) {
-            $data['message'] = $e->getMessage();
+            $data['message'] = $e->getMessage()." " .$e->getLine()." ".$e->getFile();
             return  $this->apiResponse($data, 404);
         }
+    }
+    public function createImage($img)
+    {
+
+        $image = $img;  // your base64 encoded
+        $image = str_replace('data:image/png;base64,', '', $image);
+        //$image = str_replace(' ', '+', $image);
+        $imageName = str_random(10).'.'.'png';
+        Storage::put('public/files/'.$imageName, base64_decode($image));
+       return $imageName;
+
     }
 
     /**
@@ -77,10 +101,10 @@ class PostConroller extends Controller
      * @param  \App\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function show(Post $post)
+    public function show(Request $Request,$id)
     {
         try {
-            $data['data'] = $post;
+            $data['data'] = Post::with('user','images')->withCount('favourite', 'comment')->where('id',$id)->first();;
             $data['message'] = 'edit';
             return  $this->apiResponse($data, 200);
         } catch (\Exception $e) {

@@ -20,12 +20,17 @@ class Post extends Model
 
     public function images()
     {
-        return $this->belongsTo(Images::class);
+        return $this->hasMany(Images::class);
     }
 
     public function favourite()
     {
         return $this->morphMany(Favourite::class,'type');
+    }
+
+    public function favouriteUser()
+    {
+        return $this->favourite()->select(['id', 'user_id']);
     }
 
     public function timeline()
