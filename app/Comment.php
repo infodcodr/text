@@ -15,7 +15,7 @@ class Comment extends Model
 
     public function favourite()
     {
-        return $this->hasMany(Favourite::class,'type');
+        return $this->morphMany(Favourite::class,'type');
     }
 
     public function user()
