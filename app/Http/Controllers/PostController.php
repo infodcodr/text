@@ -20,10 +20,10 @@ class PostConroller extends Controller
         try {
             if (isset($request->user_id)) {
                 $user = User::find($request->user_id);
-                $posts = $user->posts()->with(['user','images','favouriteUser','comment','comment.user'])->withCount('favourite', 'comment')->orderBy('id','desc')->paginate(8);
+                $posts = $user->posts()->with(['user','images','favouriteUser','comment','comment.user'])->withCount('favourite', 'comment','comment.favourite')->orderBy('id','desc')->paginate(8);
             } else {
                 $user = auth()->user();
-                $posts = $user->posts()->with(['user','images','favouriteUser','comment','comment.user'])->withCount('favourite', 'comment')->orderBy('id','desc')->paginate(8);
+                $posts = $user->posts()->with(['user','images','favouriteUser','comment','comment.user'])->withCount('favourite', 'comment','comment.favourite')->orderBy('id','desc')->paginate(8);
             }
             $data['data'] = $posts;
             $data['message'] = 'lists';
@@ -75,7 +75,7 @@ class PostConroller extends Controller
 
                     }
                 }
-            $data['data'] = Post::with('user','images')->withCount('favourite', 'comment')->where('id',$post->id)->first();
+            $data['data'] = Post::with('user','images')->withCount('favourite', 'comment','comment.favourite')->where('id',$post->id)->first();
             $data['message'] = 'create';
             return  $this->apiResponse($data, 200);
         } catch (\Exception $e) {
