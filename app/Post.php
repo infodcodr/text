@@ -8,12 +8,12 @@ class Post extends Model
 {
     protected $fillable = ['timeline_id', 'type', 'content', 'user_id', 'is_draft'];
 
-    public function comment()
+    public function fullcomment()
     {
         return $this->belongsToMany(Comment::class,'comment_post');
     }
 
-    public function fullcomment()
+    public function comment()
     {
         return $this->comment()->withCount('favourite');
     }
