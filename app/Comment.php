@@ -15,7 +15,7 @@ class Comment extends Model
 
     public function favourite()
     {
-        return $this->hasMany(Favourite::class);
+        return $this->hasMany(Favourite::class,'type');
     }
 
     public function user()
