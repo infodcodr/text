@@ -15,7 +15,7 @@ class Post extends Model
 
     public function comment()
     {
-        return $this->comment()->withCount('favourite');
+        return $this->fullcomment()->withCount('favourite');
     }
 
     public function user()
