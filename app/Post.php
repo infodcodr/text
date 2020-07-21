@@ -13,6 +13,11 @@ class Post extends Model
         return $this->belongsToMany(Comment::class,'comment_post');
     }
 
+    public function fullcomment()
+    {
+        return $this->comment()->withCount('favourite');
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
