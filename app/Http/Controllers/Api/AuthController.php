@@ -85,8 +85,8 @@ class AuthController extends ResponseController
     //getuser
     public function getUser(Request $request)
     {
-        //$id = $request->user()->id;
-        $user = $request->user();
+        $id = $request->user;
+        $user = User::find($id);
         if($user){
             return $this->sendResponse($user);
         }

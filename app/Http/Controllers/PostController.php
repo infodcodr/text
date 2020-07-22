@@ -20,6 +20,10 @@ class PostConroller extends Controller
         try {
             if (isset($request->user_id)) {
                 $user = User::find($request->user_id);
+                if(!$user){
+                    $data['message'] = 'No User Found';
+                    return  $this->apiResponse($data, 404);
+                }
                 $posts = $user->posts()->with(['user','images','favouriteUser','comment','comment.user'])->withCount('favourite', 'comment')->orderBy('id','desc')->paginate(8);
             } else {
                 $user = auth()->user();
