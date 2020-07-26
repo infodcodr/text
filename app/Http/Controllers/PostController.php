@@ -49,19 +49,11 @@ class PostConroller extends Controller
         try {
             $data = $request->all();
            $post = Post::create($data);
-            if ($request->hasFile('files')) {
-                foreach ($request->file('files') as $file) {
-                    $filenameWithExt = $file->getClientOriginalName();
-
-                    $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-                    // Get just ext
-                    $extension = $file->getClientOriginalExtension();
-                    // Filename to store
-                    $fileNameToStore = $filename . '_' . time() . '.' . $extension;
-                    // Upload Image
-                    $file->storeAs('public/files', $fileNameToStore);
+            if ($request->has('files')) {
+                foreach ($data['files'] as $file) {
+                    
                     $image = New Images();
-                    $image->name = $fileNameToStore;
+                    $image->name = $file;
                     $image->post_id = $post->id;
                     $image->save();
                     $post->images()->save($image);
@@ -83,6 +75,31 @@ class PostConroller extends Controller
             $data['message'] = 'create';
             return  $this->apiResponse($data, 200);
         } catch (\Exception $e) {
+            
+            $data['message'] = $e->getMessage()." " .$e->getLine()." ".$e->getFile();
+            return  $this->apiResponse($data, 404);
+        }
+    }
+    public function uploadImages(Request $request)
+    {
+        try{
+            if ($request->hasFile('file')) {
+                $file = $request->file('file');    
+                    $filenameWithExt = $file->getClientOriginalName();
+
+                    $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+                    // Get just ext
+                    $extension = $file->getClientOriginalExtension();
+                    // Filename to store
+                    $fileNameToStore = $filename . '_' . time() . '.' . $extension;
+                    // Upload Image
+                    $file->storeAs('public/files', $fileNameToStore);
+
+             
+            }
+            $data['message'] = $fileNameToStore;
+            return  $this->apiResponse($data, 200);
+        }catch(\Exception $e){
             $data['message'] = $e->getMessage()." " .$e->getLine()." ".$e->getFile();
             return  $this->apiResponse($data, 404);
         }

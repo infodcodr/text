@@ -23,6 +23,7 @@ Route::group([ 'prefix' => 'auth'], function (){
         Route::post('getuser', 'Api\AuthController@getUser');
     });
 });
+Route::post('upload', 'PostConroller@uploadImages');
 Route::group(['middleware' => 'auth:api'], function() {
     Route::post('timeline', 'PostConroller@index');
     Route::post('post', 'PostConroller@store');
@@ -50,5 +51,9 @@ Route::group(['middleware' => 'auth:api'], function() {
 
 Route::group(['middleware' => 'auth:api'], function() {
     Route::post('favourite', 'FavouriteController@store');
+});
+
+Route::group(['middleware' => 'auth:api'], function() {
+    Route::post('profile', 'UserController@update');
 });
 
