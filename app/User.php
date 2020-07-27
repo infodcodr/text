@@ -56,4 +56,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Block::class);
     }
+
+    public function loginActivity()
+    {
+        return $this->hasMany(loginActivity::class);
+    }
+    public function activity()
+    {
+        return $this->hasMany(Activity::class);
+    }
+
 }

@@ -57,3 +57,9 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::post('profile', 'UserController@update');
 });
 
+Route::group(['middleware' => 'auth:api'], function() {
+    Route::post('message', 'MessageController@index');
+    Route::post('message/store', 'MessageController@store');
+    Route::post('message/{id}', 'MessageController@show');
+});
+
