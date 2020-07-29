@@ -66,4 +66,17 @@ class User extends Authenticatable
         return $this->hasMany(Activity::class);
     }
 
+    public function privacy()
+    {
+        return $this->hasOne(Privacy::class);
+    }
+    public function notificationSetting()
+    {
+        return $this->hasOne(NotificationSetting::class);
+    }
+    public function notification()
+    {
+        return $this->hasMany(Notification::class);
+    }
+
 }

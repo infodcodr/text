@@ -58,6 +58,17 @@ Route::group(['middleware' => 'auth:api'], function() {
 });
 
 Route::group(['middleware' => 'auth:api'], function() {
+    Route::post('privacy', 'PrivacyController@store');
+});
+
+Route::group(['middleware' => 'auth:api'], function() {
+    Route::post('notification/update', 'NotificationSettingController@store');
+});
+Route::group(['middleware' => 'auth:api'], function() {
+    Route::post('block', 'BlockController@store');
+});
+
+Route::group(['middleware' => 'auth:api'], function() {
     Route::post('message', 'MessageController@index');
     Route::post('message/store', 'MessageController@store');
     Route::post('message/{id}', 'MessageController@show');
