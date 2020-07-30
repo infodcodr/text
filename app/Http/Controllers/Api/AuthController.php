@@ -88,6 +88,7 @@ class AuthController extends ResponseController
         $id = $request->user;
         if($request->user){
             $user = User::find($id);
+            $user->isFollowing = auth()->user()->isFollowing($user);
         }else{
             $user = auth()->user();
         }

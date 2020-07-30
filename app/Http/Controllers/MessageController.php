@@ -17,7 +17,7 @@ class MessageController extends Controller
         try{
             $message = New Message();
 
-            $message = $message->where('from_user_id',auth()->user()->id)->orWhere('to_user_id',auth()->user()->id)->distinct()->get();
+            $message = $message->with('user','touser')->where('from_user_id',auth()->user()->id)->orWhere('to_user_id',auth()->user()->id)->distinct()->get();
             $data['data'] = $message;
             $data['message'] = 'create';
             return  $this->apiResponse($data,200);
@@ -62,7 +62,7 @@ class MessageController extends Controller
             return  $this->apiResponse($data,200);
         }catch(\Exception $e)
         {
-            $data['message'] = 'error';
+            $data['message'] = $e->getMessage()." " .$e->getLine()." ".$e->getFile();
             return  $this->apiResponse($data,404);
         }
     }
@@ -73,18 +73,18 @@ class MessageController extends Controller
      * @param  \App\Message  $message
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request)
+    public function show(Request $request,$id)
     {
          try{
             $message = New Message();
 
-            $message = $message->where('from_user_id',auth()->user()->id)->orWhere('to_user_id',auth()->user()->id)->distinct()->get();
+            $message = $message->with('user','touser')->where('from_user_id',$id)->orWhere('to_user_id',$id)->distinct()->get();
             $data['data'] = $message;
             $data['message'] = 'create';
             return  $this->apiResponse($data,200);
         }catch(\Exception $e)
         {
-            $data['message'] = 'error';
+            $data['message'] = $e->getMessage()." " .$e->getLine()." ".$e->getFile();
             return  $this->apiResponse($data,404);
         }
     }
