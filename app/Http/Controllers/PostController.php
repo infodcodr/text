@@ -51,7 +51,7 @@ class PostConroller extends Controller
            $post = Post::create($data);
             if ($request->has('files')) {
                 foreach ($data['files'] as $file) {
-                    
+
                     $image = New Images();
                     $image->name = $file;
                     $image->post_id = $post->id;
@@ -71,11 +71,14 @@ class PostConroller extends Controller
 
                     }
                 }
+
+            $user = auth()->user();
+            $user->timeline()->save($post);
             $data['data'] = Post::with('user','images')->withCount('favourite', 'comment')->where('id',$post->id)->first();
             $data['message'] = 'create';
             return  $this->apiResponse($data, 200);
         } catch (\Exception $e) {
-            
+
             $data['message'] = $e->getMessage()." " .$e->getLine()." ".$e->getFile();
             return  $this->apiResponse($data, 404);
         }
@@ -84,7 +87,7 @@ class PostConroller extends Controller
     {
         try{
             if ($request->hasFile('file')) {
-                $file = $request->file('file');    
+                $file = $request->file('file');
                     $filenameWithExt = $file->getClientOriginalName();
 
                     $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
@@ -95,7 +98,7 @@ class PostConroller extends Controller
                     // Upload Image
                     $file->storeAs('public/files', $fileNameToStore);
 
-             
+
             }
             $data['message'] = $fileNameToStore;
             return  $this->apiResponse($data, 200);
