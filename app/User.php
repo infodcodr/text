@@ -54,7 +54,7 @@ class User extends Authenticatable
     }
     public function timeline()
     {
-        return $this->belongsTo(Timeline::class);
+        return $this->belongsToMany(Timeline::class,TimelinePost::class);
     }
     public function block()
     {
