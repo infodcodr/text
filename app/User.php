@@ -54,7 +54,7 @@ class User extends Authenticatable
     }
     public function timeline()
     {
-        return $this->belongsToMany(Timeline::class,TimelinePost::class);
+        return $this->hasOne(Timeline::class);
     }
     public function block()
     {
