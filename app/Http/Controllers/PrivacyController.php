@@ -14,7 +14,25 @@ class PrivacyController extends Controller
      */
     public function index()
     {
-        //
+        try{
+            $data = $request->all();
+            $user = auth()->user();
+            $privacy = $user->privacy;
+            if(!$privacy)
+            {
+                $privacy = New Privacy();
+                $privacy->user_id = auth()->user()->id;
+                $privacy->save();
+            }
+          
+            $data['data'] = $privacy;
+            $data['message'] = 'Privacy';
+            return  $this->apiResponse($data,200);
+        }catch(\Exception $e)
+        {
+            $data['message'] = $e->getMessage();
+            return  $this->apiResponse($data,404);
+        }
     }
 
     /**

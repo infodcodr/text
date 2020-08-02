@@ -60,6 +60,7 @@ Route::group(['middleware' => 'auth:api'], function() {
 
 Route::group(['middleware' => 'auth:api'], function() {
     Route::post('privacy', 'PrivacyController@store');
+    Route::get('privacy', 'PrivacyController@index');
 });
 
 Route::group(['middleware' => 'auth:api'], function() {
