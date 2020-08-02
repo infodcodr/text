@@ -15,7 +15,6 @@ class PrivacyController extends Controller
     public function index()
     {
         try{
-            $data = $request->all();
             $user = auth()->user();
             $privacy = $user->privacy;
             if(!$privacy)
