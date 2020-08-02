@@ -47,7 +47,7 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::post('reject', 'UserController@reject');
     Route::post('remove', 'UserController@removeAccount');
     Route::post('profile', 'UserController@profileUpload');
-    Route::post('search', 'UserController@search');
+    Route::get('search/{key}', 'UserController@search');
 });
 
 Route::group(['middleware' => 'auth:api'], function() {
@@ -64,6 +64,7 @@ Route::group(['middleware' => 'auth:api'], function() {
 
 Route::group(['middleware' => 'auth:api'], function() {
     Route::post('notification/update', 'NotificationSettingController@store');
+    Route::get('notification/get', 'NotificationSettingController@index');
 });
 Route::group(['middleware' => 'auth:api'], function() {
     Route::post('block', 'BlockController@store');

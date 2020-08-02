@@ -14,7 +14,24 @@ class NotificationSettingController extends Controller
      */
     public function index()
     {
-        //
+        try{
+            $data = $request->all();
+            $user = auth()->user();
+            $notificationSetting = $user->notificationSetting;
+            if(!$notificationSetting)
+            {
+                $notificationSetting = New NotificationSetting();
+                $notificationSetting->user_id = auth()->user()->id;
+                $notificationSetting->save();
+            }
+            $data['data'] = $notificationSetting;
+            $data['message'] = 'Notification Settings';
+            return  $this->apiResponse($data,200);
+        }catch(\Exception $e)
+        {
+            $data['message'] = 'error';
+            return  $this->apiResponse($data,404);
+        }
     }
 
     /**
@@ -44,6 +61,7 @@ class NotificationSettingController extends Controller
             {
                 $notificationSetting = New NotificationSetting();
                 $notificationSetting->user_id = auth()->user()->id;
+                $notificationSetting->save();
             }
             $notificationSetting->{$request->type} = ($notificationSetting->{$request->type})?false:true;
             $notificationSetting->save();
@@ -54,7 +72,7 @@ class NotificationSettingController extends Controller
             $data['message'] = 'error';
             return  $this->apiResponse($data,404);
         }
-    }
+    
     }
 
     /**

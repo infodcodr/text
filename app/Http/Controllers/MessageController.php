@@ -78,7 +78,13 @@ class MessageController extends Controller
          try{
             $message = New Message();
 
-            $message = $message->with('user','touser')->where('from_user_id',$id)->orWhere('to_user_id',$id)->distinct()->get();
+            $message = $message->with('user','touser')->where(function ($query) use($id) {
+    $query->where('from_user_id', '=', $id)
+          ->Where('to_user_id', '=', auth()->user()->id);
+})->orwhere(function ($query) use($id) {
+    $query->where('from_user_id', '=', auth()->user()->id)
+          ->Where('to_user_id', '=', $id);
+})->get();
             $data['data'] = $message;
             $data['message'] = 'create';
             return  $this->apiResponse($data,200);
