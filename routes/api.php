@@ -47,6 +47,7 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::post('reject', 'UserController@reject');
     Route::post('remove', 'UserController@removeAccount');
     Route::post('profile', 'UserController@profileUpload');
+    Route::post('search', 'UserController@search');
 });
 
 Route::group(['middleware' => 'auth:api'], function() {

@@ -43,6 +43,7 @@ class PrivacyController extends Controller
             {
                 $privacy = New Privacy();
                 $privacy->user_id = auth()->user()->id;
+                $privacy->save();
             }
             $privacy->{$request->type} = ($privacy->{$request->type})?false:true;
             $privacy->save();
@@ -50,7 +51,7 @@ class PrivacyController extends Controller
             return  $this->apiResponse($data,200);
         }catch(\Exception $e)
         {
-            $data['message'] = 'error';
+            $data['message'] = $e->getMessage();
             return  $this->apiResponse($data,404);
         }
     }

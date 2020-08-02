@@ -156,4 +156,16 @@ class UserController extends Controller
             return  $this->apiResponse($data,404);
         }
     }
+    public function search(Request $request)
+    {
+        try{
+            $search = $request->key;
+            $users = User::where('name','like','%'.$search.'%')->get();
+            $data['message'] = $users;
+            return  $this->apiResponse($data,200);
+        }catch(\Exception $e){
+            $data['message'] = 'error';
+            return  $this->apiResponse($data,404);
+        }
+    }
 }
