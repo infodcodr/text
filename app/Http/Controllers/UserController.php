@@ -67,13 +67,18 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         try{
             $data = $request->all();
             $user = auth()->user();
-            auth()->user()->update($data);
+            $user = User::find(auth()->user()->id);
+            $user->profile = $data['profile'];
+            $user->cover = $data['cover'];
+            $user->name = $data['name'];
+            $user->save();
             $data['message'] = 'update';
+            $data['data'] = $user;
             return  $this->apiResponse($data,200);
         }catch(\Exception $e){
             $data['message'] = $e->getMessage();

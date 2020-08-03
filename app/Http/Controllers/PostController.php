@@ -128,7 +128,7 @@ class PostConroller extends Controller
     public function show(Request $Request,$id)
     {
         try {
-            $data['data'] = Post::with('user','images')->withCount('favourite', 'comment')->where('id',$id)->first();;
+            $data['data'] = Post::with(['user','images','favouriteUser','comment','comment.user'])->withCount('favourite', 'comment')->where('id',$id)->first();;
             $data['message'] = 'edit';
             return  $this->apiResponse($data, 200);
         } catch (\Exception $e) {

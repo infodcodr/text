@@ -47,7 +47,7 @@ class CommentController extends Controller
             return  $this->apiResponse($data,200);
         }catch(\Exception $e)
         {
-            $data['message'] = 'error';
+            $data['message'] = $e->getMessage();
             return  $this->apiResponse($data,404);
         }
     }
