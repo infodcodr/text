@@ -82,5 +82,13 @@ class User extends Authenticatable
     {
         return $this->hasMany(Notification::class);
     }
+    public function isBlock($user)
+    {
+        $block = Block::where('blocked_by',auth()->user()->id)->where('user_id',$user->id)->first();
+        if($block){
+            return true;
+        }
+        return false;
+    }
 
 }

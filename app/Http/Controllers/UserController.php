@@ -161,6 +161,12 @@ class UserController extends Controller
         try{
             $search = $key;
             $users = User::where('name','like','%'.$search.'%')->get();
+            foreach($users as $user){
+                $user->isFollowing = auth()->user()->isFollowing($user);
+                $user->requestedFollowing = auth()->user()->hasRequestedToFollow($user);
+            }
+
+
             $data['message'] = $users;
             return  $this->apiResponse($data,200);
         }catch(\Exception $e){

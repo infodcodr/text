@@ -14,7 +14,17 @@ class BlockController extends Controller
      */
     public function index()
     {
-        //
+        try{
+            $block = New Block();
+            $block = $block->where('user_id',auth()->user()->id)->get();
+            $data['data'] = $block;
+            $data['message'] = 'block';
+            return  $this->apiResponse($data,200);
+        }catch(\Exception $e)
+        {
+            $data['message'] = $e->getMessage();
+            return  $this->apiResponse($data,404);
+        }
     }
 
     /**
