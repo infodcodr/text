@@ -69,6 +69,7 @@ Route::group(['middleware' => 'auth:api'], function() {
 });
 Route::group(['middleware' => 'auth:api'], function() {
     Route::post('block', 'BlockController@store');
+    Route::post('block/list', 'BlockController@index');
 });
 
 Route::group(['middleware' => 'auth:api'], function() {

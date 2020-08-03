@@ -16,7 +16,7 @@ class BlockController extends Controller
     {
         try{
             $block = New Block();
-            $block = $block->where('user_id',auth()->user()->id)->get();
+            $block = $block->with('user')->where('user_id',auth()->user()->id)->get();
             $data['data'] = $block;
             $data['message'] = 'block';
             return  $this->apiResponse($data,200);
