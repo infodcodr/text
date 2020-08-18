@@ -27,7 +27,7 @@ class PostConroller extends Controller
                 $posts = $user->posts()->with(['user','images','favouriteUser','comment','comment.user'])->withCount('favourite', 'comment')->orderBy('id','desc')->paginate(8);
             } else {
                 $user = auth()->user();
-                $posts = $user->posts()->with(['user','images','favouriteUser','comment','comment.user'])->withCount('favourite', 'comment')->orderBy('id','desc')->paginate(8);
+                $posts = $user->timelinePost()->with(['user','images','favouriteUser','comment','comment.user'])->withCount('favourite', 'comment')->orderBy('id','desc')->paginate(8);
             }
             $data['data'] = $posts;
             $data['message'] = 'lists';
