@@ -82,6 +82,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Notification::class);
     }
+
+    public function timelinePost()
+    {
+        $users = $this->followings()->pluck('to_user_id');
+        return $posts = Post::whereIn('user_id',$users);
+    }
     public function isBlock($user)
     {
         $block = Block::where('blocked_by',auth()->user()->id)->where('user_id',$user->id)->first();

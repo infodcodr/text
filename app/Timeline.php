@@ -13,6 +13,15 @@ class Timeline extends Model
 
     public function post()
     {
-        return $this->hasMany(Post::class);
+        return $this->belongsToMany(Post::class,'timeline_post','timeline','type_id');
+    }
+    
+    public function store($model)
+    {
+        $newPost = New TimelinePost();
+        $newPost->type_id=$model->id;
+        $newPost->timeline=$this->id;
+        $newPost->type_type= get_class($model);
+        $newPost->save();
     }
 }

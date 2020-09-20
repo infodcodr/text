@@ -15,7 +15,7 @@ class NotificationSettingController extends Controller
     public function index()
     {
         try{
-            $data = $request->all();
+            //$data = $request->all();
             $user = auth()->user();
             $notificationSetting = $user->notificationSetting;
             if(!$notificationSetting)
@@ -72,7 +72,7 @@ class NotificationSettingController extends Controller
             $data['message'] = 'error';
             return  $this->apiResponse($data,404);
         }
-    
+
     }
 
     /**
