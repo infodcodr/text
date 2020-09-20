@@ -73,9 +73,15 @@ class UserController extends Controller
             $data = $request->all();
             $user = auth()->user();
             $user = User::find(auth()->user()->id);
-            $user->profile = $data['profile'];
-            $user->cover = $data['cover'];
+            if(isset($data['profile'])){
+            $user->profile =  $data['profile'] ;
+            }
+            if(isset($data['cover'])){
+            $user->cover =$data['cover'];
+            }
+            if(isset($data['name'])){
             $user->name = $data['name'];
+            }
             $user->save();
             $data['message'] = 'update';
             $data['data'] = $user;

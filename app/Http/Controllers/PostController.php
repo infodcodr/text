@@ -27,7 +27,7 @@ class PostConroller extends Controller
                 $posts = $user->posts()->with(['user','images','favouriteUser','comment','comment.user'])->withCount('favourite', 'comment')->orderBy('id','desc')->paginate(8);
             } else {
                 $user = auth()->user();
-                $posts = $user->posts()->with(['user','images','favouriteUser','comment','comment.user'])->withCount('favourite', 'comment')->orderBy('id','desc')->paginate(8);
+                $posts = $user->timelinePost()->with(['user','images','favouriteUser','comment','comment.user'])->withCount('favourite', 'comment')->orderBy('id','desc')->paginate(8);
             }
             $data['data'] = $posts;
             $data['message'] = 'lists';
@@ -48,17 +48,29 @@ class PostConroller extends Controller
     {
         try {
             $data = $request->all();
-           $post = Post::create($data);
+            $post = Post::create($data);
             if ($request->has('files')) {
-                foreach ($data['files'] as $file) {
+                foreach($request->file('files') as $file){
+                    $filenameWithExt = $file->getClientOriginalName();
+
+
+                    $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+                    // Get just ext
+                    $extension = $file->getClientOriginalExtension();
+                    // Filename to store
+                    $fileNameToStore = $filename . '_' . time() . '.' . $extension;
+                    // Upload Image
+                    $file->storeAs('public/files', $fileNameToStore);
+
 
                     $image = New Images();
-                    $image->name = $file;
+                    $image->name = $fileNameToStore;
                     $image->post_id = $post->id;
                     $image->save();
                     $post->images()->save($image);
                 }
             }
+
                 if(isset($data['base64Image']))
                 {
                     foreach ($data['base64Image'] as $images) {
@@ -92,7 +104,7 @@ class PostConroller extends Controller
 
                     $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
                     // Get just ext
-                    $extension = $file->getClientOriginalExtension();
+                    $extension = $file->getClientOriginalName();
                     // Filename to store
                     $fileNameToStore = $filename . '_' . time() . '.' . $extension;
                     // Upload Image
