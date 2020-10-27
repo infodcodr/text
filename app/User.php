@@ -74,6 +74,10 @@ class User extends Authenticatable
     {
         return $this->hasOne(Privacy::class);
     }
+    public function statusGroup()
+    {
+        return $this->hasMany(StatusGroup::class);
+    }
     public function notificationSetting()
     {
         return $this->hasOne(NotificationSetting::class);

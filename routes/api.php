@@ -59,6 +59,17 @@ Route::group(['middleware' => 'auth:api'], function() {
 });
 
 Route::group(['middleware' => 'auth:api'], function() {
+    Route::post('status/group', 'StatusGroupController@store');
+});
+Route::group(['middleware' => 'auth:api'], function() {
+    Route::post('status/view', 'StatusViewController@store');
+});
+
+Route::group(['middleware' => 'auth:api'], function() {
+    Route::post('status/create', 'StatusController@store');
+});
+
+Route::group(['middleware' => 'auth:api'], function() {
     Route::post('privacy', 'PrivacyController@store');
     Route::get('privacy', 'PrivacyController@index');
 });
