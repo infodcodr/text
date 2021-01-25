@@ -8,7 +8,7 @@ use App\Images;
 use Storage;
 use Illuminate\Http\Request;
 
-class PostConroller extends Controller
+class PostController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -85,7 +85,7 @@ class PostConroller extends Controller
                 }
 
             $user = auth()->user();
-            $user->timeline()->store($post);
+            $user->timeline->store($post);
             $data['data'] = Post::with('user','images')->withCount('favourite', 'comment')->where('id',$post->id)->first();
             $data['message'] = 'create';
             return  $this->apiResponse($data, 200);

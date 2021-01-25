@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace App;
+namespace App\Traits;
 
 use Illuminate\Database\Eloquent\Model;
 

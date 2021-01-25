@@ -16,7 +16,7 @@ class CreatePrivaciesTable extends Migration
         Schema::create('privacies', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('user_id');
-            $table->integer('commnet')->default(0);
+            $table->integer('comment')->default(0);
             $table->integer('post')->default(0);
             $table->integer('mention')->default(0);
             $table->integer('restricted')->default(0);

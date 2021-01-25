@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\Followable;
+use App\Traits\Followable;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -90,6 +90,7 @@ class User extends Authenticatable
     public function timelinePost()
     {
         $users = $this->followings()->pluck('to_user_id');
+        $users[]=  (auth()->check())?auth()->user()->id:0;
         return $posts = Post::whereIn('user_id',$users);
     }
     public function isBlock($user)
