@@ -23,13 +23,13 @@ Route::group([ 'prefix' => 'auth'], function (){
         Route::post('getuser', 'Api\AuthController@getUser');
     });
 });
-Route::post('upload', 'PostConroller@uploadImages');
+Route::post('upload', 'PostController@uploadImages');
 Route::group(['middleware' => 'auth:api'], function() {
-    Route::post('timeline', 'PostConroller@index');
-    Route::post('post', 'PostConroller@store');
-    Route::post('post/{id}', 'PostConroller@show');
-    Route::post('post/{id}/update', 'PostConroller@update');
-    Route::post('post/{id}/remove', 'PostConroller@destroy');
+    Route::post('timeline', 'PostController@index');
+    Route::post('post', 'PostController@store');
+    Route::post('post/{id}', 'PostController@show');
+    Route::post('post/{id}/update', 'PostController@update');
+    Route::post('post/{id}/remove', 'PostController@destroy');
 });
 
 
