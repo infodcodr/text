@@ -15,8 +15,8 @@ class Timeline extends Model
     {
         return $this->belongsToMany(Post::class,'timeline_post','timeline','type_id');
     }
-    
-    public function store($model)
+
+    public function storePost($model)
     {
         $newPost = New TimelinePost();
         $newPost->type_id=$model->id;

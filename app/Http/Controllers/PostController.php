@@ -85,7 +85,7 @@ class PostController extends Controller
                 }
 
             $user = auth()->user();
-            $user->timeline()->store($post);
+            $user->timeline()->storePost($post);
             $data['data'] = Post::with('user','images')->withCount('favourite', 'comment')->where('id',$post->id)->first();
             $data['message'] = 'create';
             return  $this->apiResponse($data, 200);
